@@ -1,0 +1,7 @@
+#ifndef CALCULATOR_STACK_H
+#define CALCULATOR_STACK_H
+
+
+
+
+#endif //CALCULATOR_STACK_H
