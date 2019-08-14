@@ -5,5 +5,8 @@ int main(){
     stack mine;
     mine.push(1);
     mine.push(25);
+
     mine.display();
+
+    std::cout << mine.nextPop();
 }

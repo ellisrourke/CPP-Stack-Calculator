@@ -1,0 +1,8 @@
+//
+// Created by Ellis on 14/08/2019.
+//
+
+#ifndef CALCULATOR_CALCULATOR_H
+#define CALCULATOR_CALCULATOR_H
+
+#endif //CALCULATOR_CALCULATOR_H

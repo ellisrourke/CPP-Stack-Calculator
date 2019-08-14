@@ -18,11 +18,22 @@ public:
 
     };
 
-    //int pop();
+    int pop(){
+        if(items <= 0)
+            return 0;
+        items -= 1;
+        return list[items];
+    };
+
+    int nextPop(){
+        return list[items-1];
+
+    }
 
     int display(){
         for(int i=0;i<items;i++){
             std::cout << list[i] << " ";
         }
+        std::cout << std::endl;
     }
 };
