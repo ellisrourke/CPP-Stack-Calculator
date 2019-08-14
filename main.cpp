@@ -1,12 +1,11 @@
 #include <iostream>
-#include "stack.cpp"
+#include "calculator.cpp"
 
 int main(){
-    stack mine;
-    mine.push(1);
-    mine.push(25);
+    calculator myCalc;
 
-    mine.display();
+    myCalc.displayEquation();
 
-    std::cout << mine.nextPop();
+    std::cout << myCalc.equationLen;
+
 }
