@@ -35,8 +35,7 @@ public:
                 equation[equationLen] = std::stoi(value);
             } else {
                 int prec = 0;
-                switch (value[0])
-                {
+                switch (value[0]){
                     case '(' : prec = -2;
                         break;
                     case ')' : prec = -3;
