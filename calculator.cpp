@@ -11,7 +11,7 @@ public:
     const int *precedence = new int[8] {0,0,1,1,2,2,3,3};
     int *equation;
     int equationLen=0;
-    int answer=0;
+    int answer= 0;
     std::string strin;
 
     stack operators;
@@ -57,17 +57,18 @@ public:
     }
 
 
-    static int operation(int operator1, int operator2, int operand){
-        switch (operand){
-            case -4:
+    int operation(int operator1, int operator2, int op){
+        switch (op){
+            case -4 :
                 return operator1 + operator2;
-            case -5:
-                return operator1 - operator2;
-            case -6:
+            case -5 :
+                return operator2 - operator1;
+            case -6 :
                 return operator1 * operator2;
-            case -7:
-                return operator1 / operator2;
-            default: return 0;
+            case -7 :
+                return operator2 / operator1;
+            default:
+                return operator1;
 
         }
     }
@@ -90,10 +91,7 @@ public:
 
     void calcLogic(){
         for(int i=0;i<equationLen;i++){
-            operands.display();
-            operators.display();
             int current = equation[i];
-
             if(current>=0){
                 operands.push(current);
             }
@@ -102,19 +100,48 @@ public:
                 //pushing (
             } else if(current == -3) {
                 while (true) {
-                    int op = operators.pop();
-                    if(op == -2)
+                    int operate = operators.pop();
+                    if (operate == -2)
                         break;
-                    else {
-                        int op1 = operands.pop();
-                        int op2 = operands.pop();
-                        int result = operation(op1, op2, op);
-                        std::cout << result << std::endl;
-                        operands.push(result);
-                    }
+                    int operand1 = operands.pop();
+                    operands.push(operation(operand1, operands.pop(), operate));
                 }
+            } else {
+                //When you get an operator O in the array e.g. +, −, ∗, /, assume O-
+                //is the operator e.g. +, −, ∗,
+                ///, (, $ to be popped from the stack next. If O- has a lower precedence than O then push O to the
+                //operator stack. Otherwise, if O- has a higher/equal precedence than O, then pop O-
+                //from the
+                //operator stack and pop two operands from the operand stack, compute the result depending on
+                //the popped operator, and push the result to the operand stack. Carefully notice the left and the
+                //right operands. Go to the beginning of this step to consider the next operator O-
+                //to be popped
+                //from the operator stack since we have not yet done with the operator O.
+
+
+
+
+
+
+
+
+
+
             }
+                std::cout << "Operands:  ";
+                operands.display();
+                std::cout << "Operators: ";
+                operators.display();
+                std::cout << std::endl;
+
         }
+        int operand1 = operands.pop();
+        answer = operation(operand1, operands.pop(), operators.pop());
+
+    }
+
+    void main(){
+        //std::cout << answer << std::endl;
     }
 
 };

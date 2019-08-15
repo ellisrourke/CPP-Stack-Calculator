@@ -2,20 +2,19 @@
 #include "stack.h"
 
 class stack {
-private:
+public:
     int *list;
     int items;
 
-public:
+
     stack(){
-        list = new int[100];
+        list = new int[256];
         items = 0;
     }
 
     void push(int x){
-        list[items] = x;
-        items++;
-
+        items+=1;
+        list[items - 1] = x;
     };
 
     int pop(){
