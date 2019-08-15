@@ -30,7 +30,7 @@ public:
 
     }
 
-    int display(){
+    void display(){
         for(int i=0;i<items;i++){
             std::cout << list[i] << " ";
         }

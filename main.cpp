@@ -3,9 +3,10 @@
 
 int main(){
     calculator myCalc;
-
     myCalc.displayEquation();
+    myCalc.calcLogic();
+    //std::cout << myCalc.operation(12,3,-2);
 
-    std::cout << myCalc.equationLen;
+
 
 }
