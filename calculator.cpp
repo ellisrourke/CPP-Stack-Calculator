@@ -8,17 +8,18 @@
 #include <iostream>
 class calculator {
 public:
-    const int *precedence = new int[8] {0,0,1,1,2,2,3,3};
+    int precedence[8] = {0, 0, 1, 1, 2, 2, 3, 3};
     int *equation;
-    int equationLen=0;
-    int answer= 0;
+    int equationLen = 0;
+    int answer = 0;
     std::string strin;
-
     stack operators;
     stack operands;
+    stack postfix;
 
-    calculator(){
+    calculator() {
         operators.push(-1);
+        postfix.push(-1);
         std::cout << "Enter an equation: ";
         std::getline(std::cin, strin);
         equation = new int[strin.length()];
@@ -26,55 +27,64 @@ public:
 
     }
 
-    void createEquation(){
-
+    void createEquation() {
+        //CONVERT INPUT STING INTO STREAM
         std::stringstream iss(strin);
         std::string value;
-
-        while(iss >> value) {
+        //FOR EVERY CHAR, IF AN INT (OPERAND) PUSH TO EQUATION
+        //ELSE, IF ITS A OPERATOR, GET ITS PRECEDENCE
+        while (iss >> value) {
             if (isdigit(value[0])) {
                 equation[equationLen] = std::stoi(value);
             } else {
-                int prec = 0;
+                int opIdentifier = 0;
                 switch (value[0]){
-                    case '(' : prec = -2;
+                    case '(' :
+                        opIdentifier = -2;
                         break;
-                    case ')' : prec = -3;
+                    case ')' :
+                        opIdentifier = -3;
                         break;
-                    case '+' : prec = -4;
+                    case '+' :
+                        opIdentifier = -4;
                         break;
-                    case '-' : prec = -5;
+                    case '-' :
+                        opIdentifier = -5;
                         break;
-                    case '*' : prec = -6;
+                    case '*' :
+                        opIdentifier = -6;
                         break;
-                    case '/' : prec = -7;
+                    case '/' :
+                        opIdentifier = -7;
                         break;
                 }
-                equation[equationLen] = prec;
+                equation[equationLen] = opIdentifier;
             }
             equationLen += 1;
         }
     }
 
 
-    int operation(int operator1, int operator2, int op){
-        switch (op){
-            case -4 :
-                return operator1 + operator2;
-            case -5 :
-                return operator2 - operator1;
-            case -6 :
-                return operator1 * operator2;
-            case -7 :
-                return operator2 / operator1;
+    static int operation(int operand1, int operand2, int op) {
+        //take in two operands and an operate, compute the result and return the value
+        switch (op) {
+            case -4:
+                std::cout << "operation: " << operand1 << " " << op << " " << operand2 << std::endl;
+                return operand1 + operand2;
+            case -5:
+                return operand2 - operand1;
+            case -6:
+                return operand1 * operand2;
+            case -7:
+                return operand2 / operand1;
             default:
-                return operator1;
+                return operand1;
 
         }
     }
 
-    void displayEquation(){
-        for(int i=0;i<equationLen;i++){
+    void displayEquation() {
+        for (int i = 0; i < equationLen; i++) {
             std::cout << equation[i] << " ";
         }
         std::cout << std::endl;
@@ -84,64 +94,47 @@ public:
 //identifier  -1 -2 -3 -4 -5 -6 -7
 //precedence 0 0  1  1  2  2  3  3
 
-//(c) When you get an operator ) in the array, keep popping operators from the operator stack until
-//you pop (. For each operator popped, except the last ( of course, pop two operands from the
-//operand stack, compute the result depending on the popped operator and and push the result
-//back to the operand stack. Carefully notice the left and the right operands.
+    void calcLogic() {
+        //get each element.
+        //First, check if it is an operand, if is, push to operands stack.
+        //if the current element is an open bracket... push to the operators stack
 
-    void calcLogic(){
-        for(int i=0;i<equationLen;i++){
+        for (int i = 0; i < equationLen; i++) {
             int current = equation[i];
-            if(current>=0){
+            if (current >= 0) {
                 operands.push(current);
-            }
-            else if(current == -2){
+            } else if (current == -2) {
                 operators.push(-2);
-                //pushing (
-            } else if(current == -3) {
+            } else if (current == -3) {
                 while (true) {
                     int operate = operators.pop();
                     if (operate == -2)
                         break;
                     int operand1 = operands.pop();
-                    operands.push(operation(operand1, operands.pop(), operate));
+                    int operand2 = operands.pop();
+                    operands.push(operation(operand1, operand2, operate));
                 }
+            } else if (precedence[-(operators.nextPop())] < precedence[-(current)]) {
+                operators.push(current);
             } else {
-                //When you get an operator O in the array e.g. +, −, ∗, /, assume O-
-                //is the operator e.g. +, −, ∗,
-                ///, (, $ to be popped from the stack next. If O- has a lower precedence than O then push O to the
-                //operator stack. Otherwise, if O- has a higher/equal precedence than O, then pop O-
-                //from the
-                //operator stack and pop two operands from the operand stack, compute the result depending on
-                //the popped operator, and push the result to the operand stack. Carefully notice the left and the
-                //right operands. Go to the beginning of this step to consider the next operator O-
-                //to be popped
-                //from the operator stack since we have not yet done with the operator O.
-
-
-
-
-
-
-
-
-
-
+                int operand1 = operands.pop();
+                int operand2 = operands.pop();
+                operands.push(operation(operand1, operand2, operators.pop()));
+                operators.push(current);
             }
-                std::cout << "Operands:  ";
-                operands.display();
-                std::cout << "Operators: ";
-                operators.display();
-                std::cout << std::endl;
 
+            std::cout << "operators" << std::endl;
+            operators.display();
+            std::cout << "operands" << std::endl;
+            operands.display();
         }
+
         int operand1 = operands.pop();
-        answer = operation(operand1, operands.pop(), operators.pop());
+        int operand2 = operands.pop();
+        answer = operation(operand1, operand2, operators.pop());
 
-    }
 
-    void main(){
-        //std::cout << answer << std::endl;
+
     }
 
 };
