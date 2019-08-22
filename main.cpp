@@ -10,4 +10,6 @@ int main() {
     //std::cout << myCalc.operation(12,3,-2);
     //std::cout << myCalc.precedence[-(-6)];
 
+    myCalc.myFunc(myCalc);
+
 }

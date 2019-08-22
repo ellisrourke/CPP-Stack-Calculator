@@ -17,6 +17,7 @@ public:
     stack operands;
     stack postfix;
 
+    //default constructor
     calculator() {
         operators.push(-1);
         postfix.push(-1);
@@ -24,7 +25,55 @@ public:
         std::getline(std::cin, strin);
         equation = new int[strin.length()];
         createEquation();
+    }
 
+    //copy constructor
+    calculator(calculator const & that):equationLen{that.equationLen}, answer{that.answer}{
+        operators = that.operators;
+        operands = that.operands;
+        equation = new int[that.strin.length()];
+
+        for(int i=0;i<equationLen;i++){
+            equation[i] = that.equation[i];
+        }
+    }
+
+    //move constructor
+    calculator(calculator && that) noexcept : operators{that.operators},operands{that.operands},
+    answer{that.answer},equation{that.equation},equationLen{that.equationLen}{
+        that.equation = nullptr;
+    }
+
+    //copy assignment
+    calculator & operator = (calculator const & that){
+        if(this != &that){
+            operands = that.operands;
+            operators = that.operators;
+            answer = that.answer;
+            equationLen = that.equationLen;
+            equation = new int[equationLen];
+
+            for(int i=0;i<equationLen;i++){
+                equation[i] = that.equation[i];
+            }
+        }
+        return *this;
+    }
+
+    //move assignment
+    calculator & operator = (calculator && that) noexcept {
+        operators = that.operators;
+        operands = that.operands;
+        equation = that.equation;
+        equationLen = that.equationLen;
+        answer = that.answer;
+        that.equation = nullptr;
+        return *this;
+    }
+
+    //destructor
+    ~calculator(){
+        delete[] equation;
     }
 
     void createEquation() {
@@ -135,6 +184,10 @@ public:
 
 
 
+    }
+
+    void myFunc(calculator const & C){
+        std::cout << C.equationLen << std::endl;
     }
 
 };
